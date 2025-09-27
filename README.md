@@ -18,7 +18,7 @@ install.view (install.list)   View / List the contents of the device
 ## micropython
 Micropython Project Management
 
-**NOT YET IMPLEMENTED**
+**NOT YET FULLY IMPLEMENTED**
 
 ## system
 System Tasks
