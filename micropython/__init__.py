@@ -1,6 +1,7 @@
 import os
 from invoke import task, Collection
 
+import clean
 import firmware
 import install
 
@@ -18,7 +19,8 @@ def shell(ctx):
 
 
 ns = Collection(
-    shell,
+    clean,
     firmware,
-    install
+    install,
+    shell
 )
