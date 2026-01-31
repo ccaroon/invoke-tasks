@@ -8,6 +8,7 @@ import utils
 
 @task
 def project(ctx, project_file):
+    """ Install a Project from a YML File """
     data = None
     with open(project_file, "r") as fptr:
         data = yaml.safe_load(fptr)
@@ -93,4 +94,5 @@ def main(ctx, src_file):
 
 @task
 def compile(ctx, filename):
+    """ Compile a .py source file to .mpy"""
     ctx.run(f"mpy-cross {filename}")
