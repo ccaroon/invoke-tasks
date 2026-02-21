@@ -8,6 +8,7 @@ BOARDS = {
         },
         "chip": "rp2040",
         "firmware": "SPARKFUN_PROMICRO-20251209-v1.27.0.uf2",
+        "reset_firmware": "https://github.com/adafruit/Adafruit-KB2040-PCB/raw/main/factory-reset/kb2040-factory-reset.uf2",
         "install": {
             "tool": "manual",
             "doc": "https://github.com/ccaroon/mikros/blob/master/micropython/docs/rp2040/kb2040.md"

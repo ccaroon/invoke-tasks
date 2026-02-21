@@ -7,45 +7,54 @@ import ports
 import utils
 
 @task
-def project(ctx, project_file):
+def project(ctx, project_file, sections=None):
     """ Install a Project from a YML File """
     data = None
     with open(project_file, "r") as fptr:
         data = yaml.safe_load(fptr)
 
+    # Exclude 'requirements' from defs b/c they don't change very often
+    # will need to explicitly include them
+    sections = ("package", "main", "boot", "libs") if sections is None else sections.split(",")
+
     # package
-    pkg_name = data.get("package")
-    if pkg_name:
-        print(f"=> Install '{pkg_name}' Package...")
-        ctx.run(f"mpremote fs cp -r {pkg_name}/ :.")
+    if "package" in sections:
+        pkg_name = data.get("package")
+        if pkg_name:
+            print(f"=> Install '{pkg_name}' Package...")
+            ctx.run(f"mpremote fs cp -r {pkg_name}/ :.")
 
     # main & boot
-    fname = data.get("main")
-    if fname:
-        print("=> Install main.py...")
-        main(ctx, fname)
+    if "main" in sections:
+        fname = data.get("main")
+        if fname:
+            print("=> Install main.py...")
+            main(ctx, fname)
 
-    fname = data.get("boot")
-    if fname:
-        print("=> Install boot.py...")
-        boot(ctx, fname)
+    if "boot" in sections:
+        fname = data.get("boot")
+        if fname:
+            print("=> Install boot.py...")
+            boot(ctx, fname)
 
     # libs
-    libs = data.get("libs", [])
-    if libs:
-        print("=> Installing libs...")
-        # Create lib/ on device
-        ctx.run("mpremote fs mkdir :lib", warn=True)
+    if "libs" in sections:
+        libs = data.get("libs", [])
+        if libs:
+            print("=> Installing libs...")
+            # Create lib/ on device
+            ctx.run("mpremote fs mkdir :lib", warn=True)
 
-        for fname in libs:
-            file(ctx, f"lib/{fname}")
+            for fname in libs:
+                file(ctx, f"lib/{fname}")
 
     # requirements
-    reqs = data.get("requirements", [])
-    if reqs:
-        print("=> Installing Requirements...")
-        for pkg in reqs:
-            ctx.run(f"mpremote mip install {pkg}")
+    if "requirements" in sections:
+        reqs = data.get("requirements", [])
+        if reqs:
+            print("=> Installing Requirements...")
+            for pkg in reqs:
+                ctx.run(f"mpremote mip install {pkg}")
 
     ctx.run("mpremote fs tree")
 
